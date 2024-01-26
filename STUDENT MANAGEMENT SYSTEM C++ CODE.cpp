@@ -1,0 +1,177 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+const int MAX_STUDENTS = 100;
+
+struct Student {
+    string name;
+    int rollNumber;
+    float marks;
+};
+
+class StudentManagementSystem {
+private:
+    Student students[MAX_STUDENTS];
+    int numberOfStudents;
+
+public:
+    StudentManagementSystem() : numberOfStudents(0) {}
+
+    void addStudent() {
+        if (numberOfStudents < MAX_STUDENTS) {
+            cout << "Enter student name: ";
+            cin >> students[numberOfStudents].name;
+
+            cout << "Enter roll number: ";
+            cin >> students[numberOfStudents].rollNumber;
+
+            cout << "Enter marks: ";
+            cin >> students[numberOfStudents].marks;
+
+            numberOfStudents++;
+
+            cout << "Student added successfully." << endl;
+        } else {
+            cout << "Maximum number of students reached." << endl;
+        }
+    }
+
+    void viewStudents() {
+        if (numberOfStudents > 0) {
+            cout << "List of students:" << endl;
+            for (int i = 0; i < numberOfStudents; ++i) {
+                cout << "Name: " << students[i].name << ", Roll Number: " << students[i].rollNumber
+                     << ", Marks: " << students[i].marks << endl;
+            }
+        } else {
+            cout << "No students available." << endl;
+        }
+    }
+
+    void searchStudent(int rollNumber) {
+        bool found = false;
+        for (int i = 0; i < numberOfStudents; ++i) {
+            if (students[i].rollNumber == rollNumber) {
+                cout << "Student found:" << endl;
+                cout << "Name: " << students[i].name << ", Roll Number: " << students[i].rollNumber
+                     << ", Marks: " << students[i].marks << endl;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            cout << "Student not found." << endl;
+        }
+    }
+
+    void modifyStudent(int rollNumber) {
+        for (int i = 0; i < numberOfStudents; ++i) {
+            if (students[i].rollNumber == rollNumber) {
+                cout << "Enter new name: ";
+                cin >> students[i].name;
+
+                cout << "Enter new marks: ";
+                cin >> students[i].marks;
+
+                cout << "Student information modified successfully." << endl;
+                return;
+            }
+        }
+
+        cout << "Student not found." << endl;
+    }
+
+    void deleteStudent(int rollNumber) {
+        for (int i = 0; i < numberOfStudents; ++i) {
+            if (students[i].rollNumber == rollNumber) {
+                // Shift the remaining elements to fill the gap
+                for (int j = i; j < numberOfStudents - 1; ++j) {
+                    students[j] = students[j + 1];
+                }
+                numberOfStudents--;
+
+                cout << "Student deleted successfully." << endl;
+                return;
+            }
+        }
+
+        cout << "Student not found." << endl;
+    }
+};
+
+bool authenticateUser() {
+    string username, password;
+
+    cout << "Enter username: ";
+    cin >> username;
+
+    cout << "Enter password: ";
+    cin >> password;
+
+    // Add your authentication logic here
+    // For demonstration purposes, a simple hardcoded username and password are used.
+    return (username == "admin" && password == "admin123");
+}
+
+int main() {
+    if (!authenticateUser()) {
+        cout << "Authentication failed. Exiting program." << endl;
+        return 0;
+    }
+
+    StudentManagementSystem sms;
+
+    while (true) {
+        cout << "\nStudent Management System Menu:" << endl;
+        cout << "1. Add Student" << endl;
+        cout << "2. View Students" << endl;
+        cout << "3. Search Student" << endl;
+        cout << "4. Modify Student" << endl;
+        cout << "5. Delete Student" << endl;
+        cout << "6. Exit" << endl;
+
+        int choice;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                sms.addStudent();
+                break;
+            case 2:
+                sms.viewStudents();
+                break;
+            case 3: {
+                int rollNumber;
+                cout << "Enter roll number to search: ";
+                cin >> rollNumber;
+                sms.searchStudent(rollNumber);
+                break;
+            }
+            case 4: {
+                int rollNumber;
+                cout << "Enter roll number to modify: ";
+                cin >> rollNumber;
+                sms.modifyStudent(rollNumber);
+                break;
+            }
+            case 5: {
+                int rollNumber;
+                cout << "Enter roll number to delete: ";
+                cin >> rollNumber;
+                sms.deleteStudent(rollNumber);
+                break;
+            }
+            case 6:
+                cout << "Exiting program." << endl;
+                return 0;
+            default:
+                cout << "Invalid choice. Please try again." << endl;
+        }
+    }
+
+    return 0;
+}
